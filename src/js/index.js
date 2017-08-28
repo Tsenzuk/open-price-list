@@ -5,8 +5,23 @@ if (!window.navigator || !window.navigator.getUserMedia) {
   throw new Error('Browser is not supported')
 }
 
+(() => {
+  const { log, error } = console;
+  const customLog = (...arguments) => {
+    const htmlConsole = document.querySelector('#scanner-console');
+    if (htmlConsole) {
+      htmlConsole.innerHTML += `${arguments.join(' ')}\n`;
+      const lines = htmlConsole.innerHTML.split('\n');
+      if (lines.length > 100 ) {
+        htmlConsole.innerHTML = lines.splice(-100).join('\n');
+      }
+    }
+  }
+  console.log = (...arguments) => (customLog.apply(console, arguments),log.apply(console, arguments));
+  console.error = (...arguments) => (customLog.apply(console, ['!!!', ...arguments]),error.apply(console, arguments));
+})()
+
 let _scannerIsRunning = false;
-const consoleElement = document.querySelector('#scanner-console')
 
 const startScanner = () => {
   Quagga.init({
@@ -50,12 +65,10 @@ const startScanner = () => {
 
   }, (error) => {
     if (error) {
-      consoleElement.innerHTML += `!!! ${error}\n`;
-      console.log(error);
+      console.log(error.name, error);
       return;
     }
-    
-    consoleElement.innerHTML += 'Initialization finished. Ready to start\n';
+
     console.log('Initialization finished. Ready to start');
     Quagga.start();
 
@@ -68,7 +81,6 @@ const startScanner = () => {
       drawingCanvas = Quagga.canvas.dom.overlay;
 
     if (result) {
-      consoleElement.innerHTML += 'Processed with result';
       if (result.boxes) {
         drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
         result
@@ -82,17 +94,14 @@ const startScanner = () => {
       }
 
       if (result.codeResult && result.codeResult.code) {
-        consoleElement.innerHTML += ` code ${result.codeResult.code}`;
         Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
       }
-      consoleElement.innerHTML += '\n';
     }
   });
 
 
   Quagga.onDetected((result) => {
     console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result);
-    consoleElement.innerHTML += `Barcode detected and processed : [${result.codeResult.code}]`;
   });
 
 }
