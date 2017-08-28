@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "../";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -75,6 +75,7 @@ if (!window.navigator || !window.navigator.getUserMedia) {
 }
 
 let _scannerIsRunning = false;
+const consoleElement = document.querySelector('#scanner-console')
 
 const startScanner = () => {
   Quagga.init({
@@ -118,11 +119,13 @@ const startScanner = () => {
 
   }, (error) => {
     if (error) {
+      consoleElement.innerHTML += `!!! ${error}\n`;
       console.log(error);
       return;
     }
-
-    console.log("Initialization finished. Ready to start");
+    
+    consoleElement.innerHTML += 'Initialization finished. Ready to start\n';
+    console.log('Initialization finished. Ready to start');
     Quagga.start();
 
     // Set flag to is running
@@ -134,6 +137,7 @@ const startScanner = () => {
       drawingCanvas = Quagga.canvas.dom.overlay;
 
     if (result) {
+      consoleElement.innerHTML += 'Processed with result';
       if (result.boxes) {
         drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
         result
@@ -147,14 +151,17 @@ const startScanner = () => {
       }
 
       if (result.codeResult && result.codeResult.code) {
+        consoleElement.innerHTML += ` code ${result.codeResult.code}`;
         Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
       }
+      consoleElement.innerHTML += '\n';
     }
   });
 
 
   Quagga.onDetected((result) => {
-    console.log("Barcode detected and processed : [" + result.codeResult.code + "]", result);
+    console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result);
+    consoleElement.innerHTML += `Barcode detected and processed : [${result.codeResult.code}]`;
   });
 
 }

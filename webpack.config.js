@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     path: path.resolve('public/'),
-    publicPath: '/',
+    publicPath: '../',
     filename: 'js/[name].js'
   },
   module: {
@@ -47,7 +47,4 @@ module.exports = {
     }),
     new ExtractTextPlugin('css/[name].css'),
   ],
-  // resolve : {
-  //   modules: ['node_modules']
-  // },
 };
