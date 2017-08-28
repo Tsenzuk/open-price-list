@@ -57,3 +57,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# IDE
+.c9
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
