@@ -12,17 +12,59 @@
         <a class="navbar-brand" href="#">Open Price List</a>
       </div>
       <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" name="scanner-code" id="scanner-code" class="form-control" />
+        </div>
         <button type="button" class="btn btn-default" id="scanner-enable">
           <i class="glyphicon glyphicon-barcode"></i>
           Enable barcode
         </button>
       </form>
+      <form class="navbar-form navbar-right">
+        <button class="btn btn-default" id="scanner-console-show" data-toggle="button" aria-pressed="false">
+          <i class="glyphicon glyphicon-cog"></i>
+        </button>
+      </form>
     </div>
   </nav>
   <div class="container">
+    <div class="row hidden">
+      <div class="col-md-12 ">
+        <textarea name="scanner-console" id="scanner-console" class="col-xs-12"></textarea>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-6">
-        <textarea name="scanner-console" id="scanner-console" class="col-xs-12"></textarea>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            Product
+            <button class="btn btn-default btn-xs pull-right" data-toggle="button" aria-pressed="false">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </button>
+          </div>
+          <!--<div class="panel-body">-->
+            
+          <!--</div>-->
+          <table class="table">
+            <tbody>
+              <tr id="scanner-table-code">
+                <td>code</td>
+                <td class="text"></td>
+                <td class="input"><input type="text" name="scanner-table-code" class="form-control"/></td>
+              </tr>
+              <tr id="scanner-table-name">
+                <td>name</td>
+                <td class="text"></td>
+                <td class="input"><input type="text" name="scanner-table-name" class="form-control"/></td>
+              </tr>
+              <tr id="scanner-table-price">
+                <td>price</td>
+                <td class="text"></td>
+                <td class="input"><input type="text" name="scanner-table-price" class="form-control"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="col-md-6">
         <div id="scanner-container"></div>

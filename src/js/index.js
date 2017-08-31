@@ -1,3 +1,5 @@
+window.jQuery = require('jquery/dist/jquery.min.js');
+require('bootstrap/dist/js/bootstrap.min.js');
 require('bootstrap/dist/css/bootstrap.css');
 const Quagga = require('quagga');
 
@@ -7,18 +9,23 @@ if (!window.navigator || !window.navigator.getUserMedia) {
 
 (() => {
   const { log, error } = console;
-  const customLog = (...arguments) => {
-    const htmlConsole = document.querySelector('#scanner-console');
+  const htmlConsole = document.querySelector('#scanner-console');
+  const customLog = (...args) => {
     if (htmlConsole) {
-      htmlConsole.innerHTML += `${arguments.join(' ')}\n`;
+      htmlConsole.innerHTML += `${args.join(' ')}\n`;
       const lines = htmlConsole.innerHTML.split('\n');
-      if (lines.length > 100 ) {
+      if (lines.length > 100) {
         htmlConsole.innerHTML = lines.splice(-100).join('\n');
       }
     }
   }
-  console.log = (...arguments) => (customLog.apply(console, arguments),log.apply(console, arguments));
-  console.error = (...arguments) => (customLog.apply(console, ['!!!', ...arguments]),error.apply(console, arguments));
+  console.log = (...args) => (customLog.apply(console, args), log.apply(console, args));
+  console.error = (...args) => (customLog.apply(console, ['!!!', ...args]), error.apply(console, args));
+
+  const buttonConsoleShow = document.querySelector('#scanner-console-show');
+  buttonConsoleShow && buttonConsoleShow.addEventListener('click', () => {
+    htmlConsole && window.jQuery(htmlConsole).closest('.row').toggleClass('hidden');
+  });
 })()
 
 let _scannerIsRunning = false;
@@ -65,7 +72,7 @@ const startScanner = () => {
 
   }, (error) => {
     if (error) {
-      console.log(error.name, error);
+      console.error(error.name, error);
       return;
     }
 
@@ -103,7 +110,8 @@ const startScanner = () => {
   Quagga.onDetected((result) => {
     console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result);
   });
-
 }
 
-document.querySelector('#scanner-enable').addEventListener('click', () => !_scannerIsRunning && startScanner())
+document
+  .querySelector('#scanner-enable')
+  .addEventListener('click', () => !_scannerIsRunning && startScanner())
