@@ -37,9 +37,7 @@ const startScanner = () => {
       type: "LiveStream",
       target: document.querySelector('#scanner-container'),
       constraints: {
-        width: 480,
-        height: 320,
-        facingMode: "environment"
+        facingMode: "environment",
       },
     },
     decoder: {
