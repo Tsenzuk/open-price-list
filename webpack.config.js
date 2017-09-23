@@ -33,7 +33,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'fonts/[name].[hash:' + HASH_LENGTH + '].[ext]',
+              name: `fonts/[name].[hash:${HASH_LENGTH}].[ext]`,
               publicPath: '../',
             },
           },
@@ -47,6 +47,14 @@ module.exports = {
         }),
       },
     ],
+  },
+  devtool: 'source-map',
+  devServer: {
+    hot: true,
+    contentBase: path.resolve(__dirname, 'public'),
+    publicPath: '/',
+    host: process.env.IP || '0.0.0.0',
+    port: process.env.PORT || 3000,
   },
   plugins: [
     new HtmlWebpackPlugin({
