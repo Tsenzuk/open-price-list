@@ -24,10 +24,13 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.5",
     "eslint": "^4.5.0",
     "eslint-config-airbnb": "^15.1.0",
+    "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "~5.1.1",
     "eslint-plugin-react": "^7.3.0",
@@ -43,6 +46,10 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.2.1",
-    "quagga": "^0.12.1"
+    "quagga": "^0.12.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   }
 }

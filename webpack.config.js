@@ -4,8 +4,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const HASH_LENGTH = 10;
 
-module.exports = {
-  entry: './src/js/index.js',
+module.exports = () => ({
+  entry: './src/index.jsx',
   output: {
     path: path.resolve('public/'),
     publicPath: './',
@@ -13,20 +13,33 @@ module.exports = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.js$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //     options: {
-      //       presets: ['env'],
-      //     },
-      //   },
-      // },
-      //   {
-      //  test: /((?!font).)*\.(jpg|png|gif|svg).*?$/,
-      //  loader: ['file-loader?name=[name].[hash:' + HASH_LENGTH + '].[ext]&publicPath=../images/'],
-      // },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+          },
+        },
+      },
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /((?!font).)*\.(jpg|png|gif|svg).*?$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: `images/[name].[hash:${HASH_LENGTH}].[ext]`,
+            publicPath: '../',
+          },
+        },
+      },
       {
         test: /font.*?\.(eot|woff|woff2|ttf|svg).*?$/,
         use: [
@@ -48,6 +61,17 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    modules: [
+      'src',
+      'node_modules',
+    ],
+    extensions: [
+      '.js',
+      '.json',
+      '.jsx',
+    ],
+  },
   devtool: 'source-map',
   devServer: {
     hot: true,
@@ -63,4 +87,4 @@ module.exports = {
     }),
     new ExtractTextPlugin('css/[name].css'),
   ],
-};
+});
