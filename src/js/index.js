@@ -1,8 +1,12 @@
-window.jQuery = require('jquery/dist/jquery.min.js');
+const Quagga = require('quagga');
+const $ = require('jquery/dist/jquery.min.js');
+
+window.jQuery = $;
+
 require('bootstrap/dist/js/bootstrap.min.js');
 require('bootstrap/dist/css/bootstrap.css');
-const Quagga = require('quagga');
 require('../css/index.css');
+
 
 if (!window.navigator || !window.navigator.getUserMedia) {
   throw new Error('Browser is not supported');
@@ -30,13 +34,64 @@ if (!window.navigator || !window.navigator.getUserMedia) {
   if (buttonConsoleShow) {
     buttonConsoleShow.addEventListener('click', () => {
       if (htmlConsole) {
-        window.jQuery(htmlConsole).closest('.row').toggleClass('hidden');
+        $(htmlConsole).closest('.row').toggleClass('hidden');
       }
     });
   }
 })();
 
 let scannerIsRunning = false;
+
+const barcodesStorage = {
+  /**
+   *
+   * @param {string|number} code
+   * @return {{code:string, name:string, prices: string[]}}
+   */
+  get(code) {
+    const defaultValue = { code: '', name: '', prices: [] };
+    if (!localStorage) {
+      return defaultValue;
+    }
+    return JSON.parse(localStorage.getItem(code)) || defaultValue;
+  },
+
+  /**
+   *
+   * @param {*} product
+   * @return {void}
+   */
+  set(product) {
+    localStorage.setItem(product.code, JSON.stringify(product));
+  },
+};
+
+class Product {
+  constructor(product = {}) {
+    this.code = product.code;
+    this.name = product.name;
+    this.prices = product.prices || [];
+  }
+
+  show() {
+    document.querySelector('#scanner-table-code input').value = this.code;
+    document.querySelector('#scanner-table-name input').value = this.name;
+    document.querySelector('#scanner-table-price input').value = this.prices[this.prices.length - 1];
+    $('#scanner-code').data('product', this);
+  }
+
+  save() {
+    const currentPrice = document.querySelector('#scanner-table-price input').value;
+    if (this.prices[this.prices.length - 1] !== currentPrice) {
+      this.prices.push(currentPrice);
+    }
+    barcodesStorage.set({
+      code: document.querySelector('#scanner-table-code input').value || this.code,
+      name: document.querySelector('#scanner-table-name input').value || this.name,
+      prices: this.prices,
+    });
+  }
+}
 
 const startScanner = () => {
   Quagga.init({
@@ -50,15 +105,15 @@ const startScanner = () => {
     },
     decoder: {
       readers: [
-        'code_128_reader',
+        // 'code_128_reader',
         'ean_reader',
-        'ean_8_reader',
-        'code_39_reader',
-        'code_39_vin_reader',
-        'codabar_reader',
-        'upc_reader',
-        'upc_e_reader',
-        'i2of5_reader',
+        // 'ean_8_reader',
+        // 'code_39_reader',
+        // 'code_39_vin_reader',
+        // 'codabar_reader',
+        // 'upc_reader',
+        // 'upc_e_reader',
+        // 'i2of5_reader',
       ],
       debug: {
         showCanvas: true,
@@ -115,9 +170,40 @@ const startScanner = () => {
 
   Quagga.onDetected((result) => {
     console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result); // eslint-disable-line no-console
+    $(document).trigger('detected.barcode', [result.codeResult.code]);
   });
 };
 
 document
   .querySelector('#scanner-enable')
   .addEventListener('click', () => !scannerIsRunning && startScanner());
+
+$(document).on('detected.barcode', (event, code) => {
+  document.querySelector('#scanner-code').value = code;
+  let product = barcodesStorage.get(code);
+  product = new Product(product);
+  if (product.name) {
+    product.show();
+  }
+});
+
+document.querySelector('#scanner-table-save').addEventListener('click', () => {
+  const product = $('#scanner-code').data('product');
+  if (product) {
+    product.save();
+  }
+});
+
+if (window.location.search) {
+  const params = window.location.search
+    .substring(1)
+    .split('&')
+    .map(param => param.split('='))
+    .map(([key, value]) => ({ [key]: value }))
+    .reduce((proto, obj) => Object.assign(proto, obj), {});
+
+  if (params['scanner-code']) {
+    const product = barcodesStorage.get(params['scanner-code']);
+    new Product(product).show();
+  }
+}
