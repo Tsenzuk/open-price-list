@@ -4,7 +4,7 @@ require('bootstrap/dist/css/bootstrap.css');
 const Quagga = require('quagga');
 
 if (!window.navigator || !window.navigator.getUserMedia) {
-  throw new Error('Browser is not supported')
+  throw new Error('Browser is not supported');
 }
 
 (() => {
@@ -18,39 +18,46 @@ if (!window.navigator || !window.navigator.getUserMedia) {
         htmlConsole.innerHTML = lines.splice(-100).join('\n');
       }
     }
-  }
+  };
+
+  /* eslint-disable no-sequences, no-console */
   console.log = (...args) => (customLog.apply(console, args), log.apply(console, args));
   console.error = (...args) => (customLog.apply(console, ['!!!', ...args]), error.apply(console, args));
+  /* eslint-enable */
 
   const buttonConsoleShow = document.querySelector('#scanner-console-show');
-  buttonConsoleShow && buttonConsoleShow.addEventListener('click', () => {
-    htmlConsole && window.jQuery(htmlConsole).closest('.row').toggleClass('hidden');
-  });
-})()
+  if (buttonConsoleShow) {
+    buttonConsoleShow.addEventListener('click', () => {
+      if (htmlConsole) {
+        window.jQuery(htmlConsole).closest('.row').toggleClass('hidden');
+      }
+    });
+  }
+})();
 
-let _scannerIsRunning = false;
+let scannerIsRunning = false;
 
 const startScanner = () => {
   Quagga.init({
     inputStream: {
-      name: "Live",
-      type: "LiveStream",
+      name: 'Live',
+      type: 'LiveStream',
       target: document.querySelector('#scanner-container'),
       constraints: {
-        facingMode: "environment",
+        facingMode: 'environment',
       },
     },
     decoder: {
       readers: [
-        "code_128_reader",
-        "ean_reader",
-        "ean_8_reader",
-        "code_39_reader",
-        "code_39_vin_reader",
-        "codabar_reader",
-        "upc_reader",
-        "upc_e_reader",
-        "i2of5_reader"
+        'code_128_reader',
+        'ean_reader',
+        'ean_8_reader',
+        'code_39_reader',
+        'code_39_vin_reader',
+        'codabar_reader',
+        'upc_reader',
+        'upc_e_reader',
+        'i2of5_reader',
       ],
       debug: {
         showCanvas: true,
@@ -63,39 +70,39 @@ const startScanner = () => {
         boxFromPatches: {
           showTransformed: true,
           showTransformedBox: true,
-          showBB: true
-        }
-      }
+          showBB: true,
+        },
+      },
     },
 
   }, (error) => {
     if (error) {
-      console.error(error.name, error);
+      console.error(error.name, error); // eslint-disable-line no-console
       return;
     }
 
-    console.log('Initialization finished. Ready to start');
+    console.log('Initialization finished. Ready to start'); // eslint-disable-line no-console
     Quagga.start();
 
     // Set flag to is running
-    _scannerIsRunning = true;
+    scannerIsRunning = true;
   });
 
   Quagga.onProcessed((result) => {
-    const drawingCtx = Quagga.canvas.ctx.overlay,
-      drawingCanvas = Quagga.canvas.dom.overlay;
+    const drawingCtx = Quagga.canvas.ctx.overlay;
+    const drawingCanvas = Quagga.canvas.dom.overlay;
 
     if (result) {
       if (result.boxes) {
-        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width'), 10), parseInt(drawingCanvas.getAttribute('height'), 10));
         result
           .boxes
           .filter(box => box !== result.box)
-          .forEach(box => Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 }));
+          .forEach(box => Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: 'green', lineWidth: 2 }));
       }
 
       if (result.box) {
-        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: '#00F', lineWidth: 2 });
       }
 
       if (result.codeResult && result.codeResult.code) {
@@ -106,10 +113,10 @@ const startScanner = () => {
 
 
   Quagga.onDetected((result) => {
-    console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result);
+    console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result); // eslint-disable-line no-console
   });
-}
+};
 
 document
   .querySelector('#scanner-enable')
-  .addEventListener('click', () => !_scannerIsRunning && startScanner())
+  .addEventListener('click', () => !scannerIsRunning && startScanner());
