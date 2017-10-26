@@ -1,0 +1,5 @@
+#scanner-container .drawingBuffer {
+  position: absolute;
+  top: 0;
+  left: 15px;
+}

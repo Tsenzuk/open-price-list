@@ -2,6 +2,7 @@ window.jQuery = require('jquery/dist/jquery.min.js');
 require('bootstrap/dist/js/bootstrap.min.js');
 require('bootstrap/dist/css/bootstrap.css');
 const Quagga = require('quagga');
+require('../css/index.css');
 
 if (!window.navigator || !window.navigator.getUserMedia) {
   throw new Error('Browser is not supported');
