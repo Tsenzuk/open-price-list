@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     path: path.resolve('public/'),
-    publicPath: '../',
+    publicPath: './',
     filename: 'js/[name].js'
   },
   module: {
@@ -23,13 +23,21 @@ module.exports = {
       //     },
       //   },
       // },
-      {
-  			test: /((?!font).)*\.(jpg|png|gif|svg).*?$/,
-  			loader: ['file-loader?name=images/[name].[hash:' + HASH_LENGTH + '].[ext]'],
-  		},
+    //   {
+  		// 	test: /((?!font).)*\.(jpg|png|gif|svg).*?$/,
+  		// 	loader: ['file-loader?name=[name].[hash:' + HASH_LENGTH + '].[ext]&publicPath=../images/'],
+  		// },
   		{
   			test: /font.*?\.(eot|woff|woff2|ttf|svg).*?$/,
-  			loader: ['file-loader?name=fonts/[name].[hash:' + HASH_LENGTH + '].[ext]'],
+  			use: [
+  			  {
+  			    loader: 'file-loader',
+  			    options: {
+  			      name: 'fonts/[name].[hash:' + HASH_LENGTH + '].[ext]',
+  			      publicPath: '../',
+  			    }
+  			  },
+			  ],
   		},
   		{
   			test: /\.css$/,

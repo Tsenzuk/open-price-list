@@ -1,3 +1,5 @@
+window.jQuery = require('jquery/dist/jquery.min.js');
+require('bootstrap/dist/js/bootstrap.min.js');
 require('bootstrap/dist/css/bootstrap.css');
 const Quagga = require('quagga');
 
@@ -5,8 +7,28 @@ if (!window.navigator || !window.navigator.getUserMedia) {
   throw new Error('Browser is not supported')
 }
 
+(() => {
+  const { log, error } = console;
+  const htmlConsole = document.querySelector('#scanner-console');
+  const customLog = (...args) => {
+    if (htmlConsole) {
+      htmlConsole.innerHTML += `${args.join(' ')}\n`;
+      const lines = htmlConsole.innerHTML.split('\n');
+      if (lines.length > 100) {
+        htmlConsole.innerHTML = lines.splice(-100).join('\n');
+      }
+    }
+  }
+  console.log = (...args) => (customLog.apply(console, args), log.apply(console, args));
+  console.error = (...args) => (customLog.apply(console, ['!!!', ...args]), error.apply(console, args));
+
+  const buttonConsoleShow = document.querySelector('#scanner-console-show');
+  buttonConsoleShow && buttonConsoleShow.addEventListener('click', () => {
+    htmlConsole && window.jQuery(htmlConsole).closest('.row').toggleClass('hidden');
+  });
+})()
+
 let _scannerIsRunning = false;
-const consoleElement = document.querySelector('#scanner-console')
 
 const startScanner = () => {
   Quagga.init({
@@ -15,9 +37,7 @@ const startScanner = () => {
       type: "LiveStream",
       target: document.querySelector('#scanner-container'),
       constraints: {
-        width: 480,
-        height: 320,
-        facingMode: "environment"
+        facingMode: "environment",
       },
     },
     decoder: {
@@ -50,12 +70,10 @@ const startScanner = () => {
 
   }, (error) => {
     if (error) {
-      consoleElement.innerHTML += `!!! ${error}\n`;
-      console.log(error);
+      console.error(error.name, error);
       return;
     }
-    
-    consoleElement.innerHTML += 'Initialization finished. Ready to start\n';
+
     console.log('Initialization finished. Ready to start');
     Quagga.start();
 
@@ -68,7 +86,6 @@ const startScanner = () => {
       drawingCanvas = Quagga.canvas.dom.overlay;
 
     if (result) {
-      consoleElement.innerHTML += 'Processed with result';
       if (result.boxes) {
         drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
         result
@@ -82,19 +99,17 @@ const startScanner = () => {
       }
 
       if (result.codeResult && result.codeResult.code) {
-        consoleElement.innerHTML += ` code ${result.codeResult.code}`;
         Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
       }
-      consoleElement.innerHTML += '\n';
     }
   });
 
 
   Quagga.onDetected((result) => {
     console.log(`Barcode detected and processed : [${result.codeResult.code}]`, result);
-    consoleElement.innerHTML += `Barcode detected and processed : [${result.codeResult.code}]`;
   });
-
 }
 
-document.querySelector('#scanner-enable').addEventListener('click', () => !_scannerIsRunning && startScanner())
+document
+  .querySelector('#scanner-enable')
+  .addEventListener('click', () => !_scannerIsRunning && startScanner())
