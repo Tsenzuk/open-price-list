@@ -4,7 +4,6 @@ import Quagga from 'quagga';
 
 class BarcodeScanner extends PureComponent {
   static propTypes = {
-    toggle: PropTypes.bool.isRequired,
     onDetected: PropTypes.func.isRequired,
   }
 
@@ -30,7 +29,7 @@ class BarcodeScanner extends PureComponent {
       },
       numOfWorkers: 2,
       decoder: {
-        readers: ['code_128_reader'],
+        readers: ['ean_reader'],
       },
       locate: true,
     }, (err) => {
@@ -44,6 +43,7 @@ class BarcodeScanner extends PureComponent {
 
   componentWillUnmount() {
     Quagga.offDetected(this.onDetected);
+    Quagga.stop();
   }
 
   /**
@@ -55,12 +55,11 @@ class BarcodeScanner extends PureComponent {
    *
    */
   onDetected(result) {
-    this.props.onDetected(result);
+    const { onDetected } = this.props;
+    onDetected(result);
   }
 
   render() {
-    const { toggle } = this.props;
-
     return (
       <div id="barcode-scanner" className="viewport" />
     );

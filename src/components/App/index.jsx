@@ -5,7 +5,7 @@ import {
 } from 'redux';
 import { Provider } from 'react-redux';
 
-import BarcodeScannerContainer from 'containers/BarcodeScanner';
+import MainPage from 'components/MainPage';
 import reducer from 'containers/reducer';
 
 const enhancers = [];
@@ -21,7 +21,7 @@ const store = compose(...enhancers)(createStore)(reducer);
 
 const App = () => (
   <Provider store={store}>
-    <BarcodeScannerContainer />
+    <MainPage />
   </Provider>
 );
 
