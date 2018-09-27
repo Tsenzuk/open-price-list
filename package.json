@@ -1,0 +1,46 @@
+{
+  "name": "open-price-list",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tsenzuk/open-price-list.git"
+  },
+  "keywords": [
+    "price",
+    "barcode",
+    "compare"
+  ],
+  "author": "tsenzuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tsenzuk/open-price-list/issues"
+  },
+  "homepage": "https://github.com/Tsenzuk/open-price-list#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "css-loader": "^0.28.5",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.3.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.30.1",
+    "koa": "^2.3.0",
+    "koa-static": "^4.0.1",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.5.5"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "quagga": "^0.12.1"
+  }
+}
