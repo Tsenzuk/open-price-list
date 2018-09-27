@@ -3,10 +3,10 @@ export default {};
 
 export const toggleBarcode = toggle => ({
   type: 'TOGGLE_BARCODE',
-  toggle,
+  payload: toggle,
 });
 
-export const barcodeFound = data => ({
+export const barcodeFound = ({ codeResult: { code } }) => ({
   type: 'BARCODE_FOUND',
-  data,
+  payload: code,
 });

@@ -7,42 +7,62 @@ class BarcodeScanner extends PureComponent {
     onDetected: PropTypes.func.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {};
+  state = {
+    errors: [],
+    codes: [],
   }
 
   componentDidMount() {
     Quagga.init({
       inputStream: {
+        name: 'Live',
         type: 'LiveStream',
         target: '#barcode-scanner',
         constraints: {
-          width: 640,
-          height: 480,
-          facing: 'environment', // or user
+          facingMode: 'environment',
         },
       },
-      locator: {
-        patchSize: 'medium',
-        halfSample: true,
-      },
-      numOfWorkers: 2,
       decoder: {
-        readers: ['ean_reader'],
+        readers: [
+          'ean_reader',
+        ],
+        debug: {
+          showCanvas: true,
+          showPatches: true,
+          showFoundPatches: true,
+          showSkeleton: true,
+          showLabels: true,
+          showPatchLabels: true,
+          showRemainingPatchLabels: true,
+          boxFromPatches: {
+            showTransformed: true,
+            showTransformedBox: true,
+            showBB: true,
+          },
+        },
       },
-      locate: true,
-    }, (err) => {
-      if (err) {
-        return console.log(err);
+
+    }, (error) => {
+      if (error) {
+        const { errors } = this.state;
+        this.setState({
+          errors: errors.concat(error.name),
+        });
+        console.error(error.name, error);
+        return;
       }
-      return Quagga.start();
+
+      console.log('Initialization finished. Ready to start');
+      Quagga.start();
     });
+
     Quagga.onDetected(this.onDetected);
+    Quagga.onProcessed(this.onProcessed);
   }
 
   componentWillUnmount() {
     Quagga.offDetected(this.onDetected);
+    Quagga.offDetected(this.onProcessed);
     Quagga.stop();
   }
 
@@ -54,14 +74,51 @@ class BarcodeScanner extends PureComponent {
    * @todo move to redux
    *
    */
-  onDetected(result) {
+  onDetected = (result) => {
     const { onDetected } = this.props;
+    const { codes } = this.state;
+    this.setState({
+      codes: codes.concat(result.codeResult.code),
+    });
+    console.log(result);
     onDetected(result);
   }
 
+  onProcessed = (result) => {
+    const drawingCtx = Quagga.canvas.ctx.overlay;
+    const drawingCanvas = Quagga.canvas.dom.overlay;
+
+    if (result) {
+      if (result.boxes) {
+        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width'), 10), parseInt(drawingCanvas.getAttribute('height'), 10));
+        result
+          .boxes
+          .filter(box => box !== result.box)
+          .forEach(box => Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: 'green', lineWidth: 2 }));
+      }
+
+      if (result.box) {
+        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: '#00F', lineWidth: 2 });
+      }
+
+      if (result.codeResult && result.codeResult.code) {
+        Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+      }
+    }
+  }
+
   render() {
+    const { errors, codes } = this.state;
     return (
-      <div id="barcode-scanner" className="viewport" />
+      <div>
+        <div id="barcode-scanner" className="viewport" />
+        <div>
+          {JSON.stringify(errors)}
+        </div>
+        <div>
+          {JSON.stringify(codes)}
+        </div>
+      </div>
     );
   }
 }

@@ -8,7 +8,13 @@ const appReducer = (state = initialState, action) => {
     case 'TOGGLE_BARCODE': {
       return {
         ...state,
-        toggle: action.toggle,
+        toggle: action.payload,
+      };
+    }
+    case 'BARCODE_FOUND': {
+      return {
+        ...state,
+        code: action.payload,
       };
     }
     default: {
