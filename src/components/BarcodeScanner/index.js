@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
-import BarcodeScanner from 'components/BarcodeScanner';
-import { barcodeFound } from './actions';
+import { barcodeFound } from 'actions/barcodeScanner';
+import BarcodeScanner from './BarcodeScanner';
 
 const mapStateToProps = state => (state);
 

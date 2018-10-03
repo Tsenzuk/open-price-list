@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import barcodeScanner from 'containers/BarcodeScanner/reducer';
+import barcodeScanner from 'reducers/barcodeScanner';
 
 const reducer = combineReducers({ barcodeScanner });
 

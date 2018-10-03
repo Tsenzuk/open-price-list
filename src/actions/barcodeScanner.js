@@ -1,6 +1,3 @@
-
-export default {};
-
 export const toggleBarcode = toggle => ({
   type: 'TOGGLE_BARCODE',
   payload: toggle,

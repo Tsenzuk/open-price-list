@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import BarcodeScannerContainer from 'containers/BarcodeScanner';
+import BarcodeScanner from 'components/BarcodeScanner';
 
 class MainPage extends PureComponent {
   state = {
@@ -19,7 +19,7 @@ class MainPage extends PureComponent {
         <button type="button" onClick={this.handleEnableClick}>Enable Camera</button>
         {
           isCameraEnabled && (
-            <BarcodeScannerContainer />
+            <BarcodeScanner />
           )
         }
       </div>

@@ -6,7 +6,7 @@ import {
 import { Provider } from 'react-redux';
 
 import MainPage from 'components/MainPage';
-import reducer from 'containers/reducer';
+import reducer from 'reducers/index';
 
 const enhancers = [];
 
