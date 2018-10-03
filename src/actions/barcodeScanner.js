@@ -1,9 +1,13 @@
-export const toggleBarcode = toggle => ({
-  type: 'TOGGLE_BARCODE',
-  payload: toggle,
+import {
+  TOGGLE_BARCODE,
+  BARCODE_FOUND,
+} from 'constants/barcodeScanner';
+
+export const toggleBarcode = () => ({
+  type: TOGGLE_BARCODE,
 });
 
 export const barcodeFound = ({ codeResult: { code } }) => ({
-  type: 'BARCODE_FOUND',
+  type: BARCODE_FOUND,
   payload: code,
 });

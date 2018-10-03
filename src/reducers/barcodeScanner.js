@@ -1,20 +1,26 @@
+import {
+  TOGGLE_BARCODE,
+  BARCODE_FOUND,
+} from 'constants/barcodeScanner';
+
 const initialState = {
-  toggle: false,
-  code: false,
+  isEnabled: false,
+  code: '',
 };
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'TOGGLE_BARCODE': {
+    case TOGGLE_BARCODE: {
       return {
         ...state,
-        toggle: action.payload,
+        isEnabled: !state.isEnabled,
       };
     }
-    case 'BARCODE_FOUND': {
+    case BARCODE_FOUND: {
       return {
         ...state,
         code: action.payload,
+        isEnabled: false,
       };
     }
     default: {

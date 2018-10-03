@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
-import MainPage from './MainPage';
+import component from './MainPage';
 
-const mapStateToProps = state => (state);
+const mapStateToProps = ({ barcodeScanner: { code, isEnabled } }) => ({ code, isEnabled });
 
 const mapDispatchToProps = {
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(component);

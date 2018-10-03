@@ -1,10 +1,18 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Quagga from 'quagga';
+import withStyles from '@material-ui/core/styles/withStyles';
 
-class BarcodeScanner extends PureComponent {
+import styles from './styles';
+
+export class BarcodeScanner extends PureComponent {
   static propTypes = {
+    classes: PropTypes.shape(),
     onDetected: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    classes: {},
   }
 
   state = {
@@ -109,8 +117,9 @@ class BarcodeScanner extends PureComponent {
 
   render() {
     const { errors, codes } = this.state;
+    const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.root}>
         <div id="barcode-scanner" className="viewport" />
         <div>
           {JSON.stringify(errors)}
@@ -123,4 +132,4 @@ class BarcodeScanner extends PureComponent {
   }
 }
 
-export default BarcodeScanner;
+export default withStyles(styles)(BarcodeScanner);
