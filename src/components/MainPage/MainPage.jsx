@@ -4,15 +4,19 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
 import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
 
+import BarcodeSearch from 'components/BarcodeSearch';
 import BarcodeScanner from 'components/BarcodeScanner';
 import BarcodeScannerToggle from 'components/BarcodeScannerToggle';
+import ProductsList from 'components/ProductsList';
 
 import styles from './styles';
 
-export const MainPage = ({ classes, code, isEnabled }) => (
+export const MainPage = ({
+  classes, isEnabled, error, closeSnackbar,
+}) => (
   <Fragment>
     <AppBar>
       <Toolbar>
@@ -31,15 +35,7 @@ export const MainPage = ({ classes, code, isEnabled }) => (
             </Typography>
           </Grid>
           <Grid item xs>
-            <Input
-              value={code}
-              className={classes.codeInput}
-              type="search"
-              placeholder="Barcode"
-              variant="filled"
-              fullWidth
-              disableUnderline
-            />
+            <BarcodeSearch />
           </Grid>
         </Grid>
 
@@ -48,21 +44,36 @@ export const MainPage = ({ classes, code, isEnabled }) => (
     </AppBar>
     <main className={classes.root}>
       <BarcodeScannerToggle />
-      {isEnabled && (<BarcodeScanner />)}
+      {isEnabled
+        ? (
+          <BarcodeScanner />
+        )
+        : (
+          <ProductsList />
+        )
+      }
     </main>
+    <Snackbar
+      open={!!error}
+      message={<span>{error}</span>}
+      autoHideDuration={4000}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      onClose={closeSnackbar}
+    />
   </Fragment>
 );
 
 MainPage.propTypes = {
   classes: PropTypes.shape(),
-  code: PropTypes.string,
   isEnabled: PropTypes.bool,
+  error: PropTypes.string,
+  closeSnackbar: PropTypes.func.isRequired,
 };
 
 MainPage.defaultProps = {
   classes: {},
-  code: '',
   isEnabled: false,
+  error: null,
 };
 
 export default withStyles(styles)(MainPage);

@@ -9,6 +9,7 @@ export class BarcodeScanner extends PureComponent {
   static propTypes = {
     classes: PropTypes.shape(),
     onDetected: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -21,6 +22,7 @@ export class BarcodeScanner extends PureComponent {
   }
 
   componentDidMount() {
+    const { onError } = this.props;
     Quagga.init({
       inputStream: {
         name: 'Live',
@@ -56,6 +58,7 @@ export class BarcodeScanner extends PureComponent {
         this.setState({
           errors: errors.concat(error.name),
         });
+        onError(error.name);
         console.error(error.name, error);
         return;
       }
