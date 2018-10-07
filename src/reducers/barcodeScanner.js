@@ -5,7 +5,6 @@ import {
   BARCODE_FOUND,
   BARCODE_ERROR,
   BARCODE_ERROR_CLEAR,
-  NEW_PRODUCT_OPEN,
 } from 'constants/barcodeScanner';
 
 const initialState = {
@@ -50,12 +49,6 @@ const appReducer = (state = initialState, { type, payload, error }) => {
       return {
         ...state,
         error: null,
-      };
-    }
-    case NEW_PRODUCT_OPEN: {
-      return {
-        ...state,
-        error: 'New Product is not implemented',
       };
     }
     default: {

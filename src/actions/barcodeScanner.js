@@ -5,7 +5,7 @@ import {
   BARCODE_FOUND,
   BARCODE_ERROR,
   BARCODE_ERROR_CLEAR,
-  NEW_PRODUCT_OPEN,
+  PRODUCT_SUBMIT,
 } from 'constants/barcodeScanner';
 import store from '../store';
 
@@ -51,6 +51,6 @@ export const barcodeErrorClear = () => ({
   type: BARCODE_ERROR_CLEAR,
 });
 
-export const openNewProduct = () => ({
-  type: NEW_PRODUCT_OPEN,
+export const productSubmit = () => ({
+  type: PRODUCT_SUBMIT,
 });

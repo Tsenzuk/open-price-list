@@ -1,14 +1,9 @@
 import { connect } from 'react-redux';
 
 import { barcodeErrorClear } from 'actions/barcodeScanner';
-import component from './MainPage';
+import component from './NewProduct';
 
-const mapStateToProps = ({ barcodeScanner: { isEnabled, products, error } }) => (
-  {
-    isEnabled,
-    products,
-    error,
-  });
+const mapStateToProps = ({ barcodeScanner: { code } }) => ({ code });
 
 const mapDispatchToProps = {
   closeSnackbar: barcodeErrorClear,
