@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 
-import { barcodeFound, barcodeParseError } from 'actions/barcodeScanner';
+import { barcodeChange, barcodeParseError } from 'actions/barcodeScanner';
 import component from './BarcodeScanner';
 
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
-  onDetected: barcodeFound,
+  onDetected: barcodeChange,
   onError: barcodeParseError,
 };
 

@@ -92,7 +92,7 @@ export class BarcodeScanner extends PureComponent {
       codes: codes.concat(result.codeResult.code),
     });
     console.log(result);
-    onDetected(result);
+    onDetected(result.codeResult.code);
   }
 
   onProcessed = (result) => {

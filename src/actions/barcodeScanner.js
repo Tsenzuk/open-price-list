@@ -1,6 +1,5 @@
 import {
   TOGGLE_BARCODE,
-  BARCODE_DETECTED,
   BARCODE_CHANGE,
   BARCODE_FOUND,
   BARCODE_ERROR,
@@ -13,11 +12,6 @@ const mockLocalStorage = { getItem: () => { }, setItem: () => { }, removeItem: (
 
 export const toggleBarcode = () => ({
   type: TOGGLE_BARCODE,
-});
-
-export const barcodeFound = ({ codeResult: { code } }) => ({
-  type: BARCODE_DETECTED,
-  payload: code,
 });
 
 const barcodeChangeActionCreator = value => ({
@@ -37,7 +31,7 @@ const barcodeSearchActionCreator = (value) => {
   };
 };
 
-export const barcodeChange = ({ target: { value } }) => {
+export const barcodeChange = (value) => {
   store.dispatch(barcodeSearchActionCreator(value));
   return barcodeChangeActionCreator(value);
 };

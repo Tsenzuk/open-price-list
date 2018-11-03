@@ -1,6 +1,5 @@
 import {
   TOGGLE_BARCODE,
-  BARCODE_DETECTED,
   BARCODE_CHANGE,
   BARCODE_FOUND,
   BARCODE_ERROR,
@@ -23,8 +22,7 @@ const appReducer = (state = initialState, { type, payload, error }) => {
         isEnabled: !state.isEnabled,
       };
     }
-    case BARCODE_CHANGE:
-    case BARCODE_DETECTED: {
+    case BARCODE_CHANGE: {
       return {
         ...state,
         code: payload,
