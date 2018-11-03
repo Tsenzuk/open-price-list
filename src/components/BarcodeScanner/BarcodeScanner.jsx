@@ -58,7 +58,7 @@ export class BarcodeScanner extends PureComponent {
         this.setState({
           errors: errors.concat(error.name),
         });
-        onError(error.name);
+        onError(`${error.name}: ${error.message}`);
         console.error(error.name, error);
         return;
       }
